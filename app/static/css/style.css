@@ -1,0 +1,12 @@
+*{
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    outline: 0px  dotted red;
+}
+
+.size{
+    font-size: 20px;
+    padding: 10px;
+    align-items: center;
+}

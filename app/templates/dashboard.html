@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <!--bootstrap CDN-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <!-- icon font-awesome-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- favicon -->
+    <link
+      rel="shortcut  icon"
+      type="image/x-icon"
+      href="{{ url_for ('static', filename='favicon.ico') }}"
+    />
+    
+    <title>Dashboard</title>
+  </head>
+  <header>
+    <div class="navbar navbar-dark bg-dark d-flex justify-content-around">
+      <div class="container d-flex justify-content-between">
+        <a href="/dashboard" class="navbar-brand flex-grow-1">
+          <i class="fa-solid fa-clapperboard"></i>
+          <strong>Movies</strong>
+        </a>
+        <a href="/logout" class="btn btn-info bg-subtle btn-lg my-2">Logout</a>
+      </div>
+    <div>
+  </header>
+  <body>
+    <main class="container">
+      <div class="row">
+        <div class="col-8 d-flex justify-content-start align-items-center">
+          <h2 class="my-4">Welcome {{user.fullname}}!</h2>
+        </div>
+        <div class="col-3 offset-1 d-flex justify-content-end align-items-center">
+        </div>
+      </div>
+      <div class="row justify-content-around pt-3 pb-4">
+        <div class="col-7 bg-dark text-light">
+          <h2 class="text-center p-3">
+            <i class="fa-solid fa-star"></i>&nbsp&nbspTop 25 Movies of All
+            Time&nbsp&nbsp<i class="fa-solid fa-star"></i>
+          </h2>
+          <hr class="bg-warning" />
+          <div class="col-12">
+            <table class="col-12 table table-hover table-dark mx-auto">
+              <thead>
+                <tr>
+                  <th>Movie</th>
+                  <th>Year</th>
+                  <th>Genre</th>
+                  <th>Favorite</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for movie in list_movies %}
+                <tr>
+                  <td class="my-0">
+                    <span>{{movie.title}}</span>
+                  </td>
+                  <td class="my-0">
+                    <span>{{movie.year}}</span>
+                  </td>
+                  <td class="my-0">
+                    <span>{{movie.genre}}</span>
+                  </td>
+                  <td>
+                  <form class="p-2" action="/add_to_favorites/{{movie['id']}}" method="post">
+                    <input type="hidden" name="id_movie" value="{{movie.id}}" />
+                    {% if movie.is_favorite %}
+                      <input type="submit" value="Attached!" class="btn btn-success btn-sm my-0" disabled>
+                    {% else %}
+                      <input type="submit" value="Add!" class="btn btn-warning btn-sm my-0">
+                    {% endif %}
+                  </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- panel right-->
+        <div class="col-5">
+          <div class="card my-0">
+            <div class="card-body bg-dark text-light">
+              <h2 class="text-center p-2 bg-dark text-light my-0">
+                Your Favorites
+              </h2>
+              <hr class="bg-warning mt-2" />
+              <form action="/show_favorites>" method="post">
+                {% if favorites %} {% for movie in favorites %}
+                <input type="hidden" name="id" value="{{movie.id}}" />
+                <div class="d-flex rounded my-2">
+                  <div class="col-10 justify-content-start align-items-center">
+                    <span class="size">{{movie.title}} </span>
+                  </div>
+                  <div class="d-flex justify-content-end align-items-center">
+                    <a
+                      href="/dashboard/remove/{{movie.id}}"
+                      class="bg-info btn btn-sm link-underline-opacity-75-hover text-white"
+                    >
+                      Delete
+                    </a>
+                  </div>
+                </div>
+                {% endfor %} {% else %}
+                <div>You do not have added movies</div>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+        <!-- Javascript-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
